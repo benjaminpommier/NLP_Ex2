@@ -41,15 +41,15 @@ class CNN_Gate_Aspect_Text(nn.Module):
 
         #Initialize the embedding, with weights if pre-trained embedding provided
         self.embed = nn.Embedding(embed_num, embed_dim) 
-        self.embed.weight = nn.Parameter(embedding, requires_grad=True) #What is exactly the type of embedding ?
+        self.embed.weight = nn.Parameter(embedding, requires_grad=True) #What is exactly embedding ?
         
         #Initialise the embedding for the aspect, with weights if pretrained embedding provided
         self.aspect_embed = nn.Embedding(aspect_embed_num, aspect_embed_dim)
         self.aspect_embed.weight = nn.Parameter(aspect_embedding, requires_grad=True)
 
-        self.convs1 = nn.ModuleList([nn.Conv1d(D, Co, K) for K in Ks])
-        self.convs2 = nn.ModuleList([nn.Conv1d(D, Co, K) for K in Ks])
-        self.convs3 = nn.ModuleList(nn.Conv1d(D, 300, 3, padding=1))
+        self.convs1 = nn.ModuleList([nn.Conv1d(embed_dim, Co, K) for K in Ks])
+        self.convs2 = nn.ModuleList([nn.Conv1d(embed_dim, Co, K) for K in Ks])
+        self.convs3 = nn.ModuleList(nn.Conv1d(embed_dim, 300, 3, padding=1))
         # self.convs3 = nn.ModuleList([nn.Conv1d(D, Co, K, padding=K-2) for K in [3]]) #old
 
         self.dropout = nn.Dropout(0.2)
@@ -64,7 +64,7 @@ class CNN_Gate_Aspect_Text(nn.Module):
         aspect_v = self.aspect_embed(aspect)  # (N, L', D)
         aa = [F.relu(conv(aspect_v.transpose(1, 2))) for conv in self.convs3]  # [(N,Co,L), ...]*len(Ks)
         aa = [F.max_pool1d(a, a.size(2)).squeeze(2) for a in aa]
-        aspect_v = torch.cat(aa, 1)
+        aspect_v = torch.cat(aa, 1) #Check what is it ?
 
         #Embedding of the context
         feature = self.embed(feature)  # (N, L, D)
@@ -72,9 +72,9 @@ class CNN_Gate_Aspect_Text(nn.Module):
         y = [F.relu(conv(feature.transpose(1, 2)) + self.fc_aspect(aspect_v).unsqueeze(2)) for conv in self.convs2]
         x = [i*j for i, j in zip(x, y)]
         # pooling method
-        x = [F.max_pool1d(i, i.size(2)).squeeze(2) for i in x]  # [(N,Co), ...]*len(Ks)
+        x = [F.max_pool1d(i, i.size(2)).squeeze(2) for i in x]  # [(N,Co), ...]*len(Ks) #TO UNDERSTAND
 
-        x = torch.cat(x, 1)
+        x = torch.cat(x, 1) #Check what is it ?
         x = self.dropout(x)  # (N,len(Ks)*Co)
         logit = self.fc1(x)  # (N,C)
-        return logit, x, y
+        return logit

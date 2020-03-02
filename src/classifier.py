@@ -47,7 +47,7 @@ def train(train_iter, dev_iter, model, epoch=5):
             target.data.sub_(1)  # batch first, index align
 
             optimizer.zero_grad()
-            logit, _, _ = model(feature, aspect)
+            logit = model(feature, aspect)
 
             loss = F.cross_entropy(logit, target)
             loss.backward()
@@ -87,18 +87,19 @@ def eval(data_iter, model):
         aspect.data.t_()
         target.data.sub_(1)  # batch first, index align
 
-        logit, pooling_input, relu_weights = model(feature, aspect)
+        logit = model(feature, aspect)
         loss = F.cross_entropy(logit, target, size_average=False)
         avg_loss += loss.data[0]
         corrects += (torch.max(logit, 1)
                      [1].view(target.size()).data == target.data).sum()
 
     size = len(data_iter.dataset)
-    avg_loss = loss.data[0]/size # Should be avg_loss instead of loss.data[0] ?
+    # avg_loss = loss.data[0]/size # Should be avg_loss instead of loss.data[0] ?
+    avg_loss = avg_loss / size
     accuracy = 100.0 * corrects/size
     model.train()
     
     print('\nEvaluation - loss: {:.6f}  acc: {:.4f}%({}/{})'.format(
            avg_loss, accuracy, corrects, size))
     
-    return accuracy, pooling_input, relu_weights
+    return accuracy
