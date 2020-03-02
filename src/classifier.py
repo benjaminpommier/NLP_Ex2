@@ -22,10 +22,9 @@ class Classifier:
         """Predicts class labels for the input instances in file 'datafile'
         Returns the list of predicted labels
         """
-
-
-
-def train(train_iter, dev_iter, model, args, epoch=5):
+        
+# CLEANED TRAIN > to be improved
+def train(train_iter, dev_iter, model, epoch=5):
     # python -m run -lr 5e-3 -batch-size 32 -verbose 1 -model CNN_Gate_Aspect -embed_file glove -r_l r -year 14 -epochs 6 -atsa
 
     time_stamps = []

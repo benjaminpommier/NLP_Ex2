@@ -10,18 +10,34 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class CNN_Gate_Aspect_Text(nn.Module):
-    def __init__(self, embedding, aspect_embedding, Co=100, Ks=[3,4,5], ):
+    def __init__(self, embedding, aspect_embedding, Co=100, Ks=[3,4,5], C=3):
+        '''
+        Gate model for aspect term classification (vs Aspect Category).
+
+        Parameters
+        ----------
+        embedding : TYPE
+            DESCRIPTION.
+        aspect_embedding : TYPE
+            DESCRIPTION.
+        Co : Int, optional
+            Number of outchannels. The default is 100.
+        Ks : List, optional
+            Size of the different kernels. The default is [3,4,5].
+        C : Int, optional
+            Number of classes to predict. The default is 3.
+
+        Returns
+        -------
+        None.
+
+        '''
         super(CNN_Gate_Aspect_Text, self).__init__()
         
         embed_num, embed_dim = embedding.shape
         aspect_embed_num, aspect_embed_dim = aspect_embed.shape #Be clear on what is aspect_embed ? Embedding of the different aspect term/class ? 
             # ATTENTION: identify whether aspect_embed_num must be equal to 12 in our case 
             # as this is the number of aspects in our dataset
-        
-        C = 3 #Number of classes to predict. Here constant to 3.
-
-        # Co = kernel_num #Number of outchannels
-        # Ks = kernel_sizes #Size of the different kernels
 
         #Initialize the embedding, with weights if pre-trained embedding provided
         self.embed = nn.Embedding(embed_num, embed_dim) 
