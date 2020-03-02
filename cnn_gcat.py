@@ -71,7 +71,7 @@ class CNN_Gate_Aspect_Text(nn.Module):
 
         #Embedding of the context
         feature = self.embed(feature)  # (N, L, D)
-        x = [torch.tanh(conv(feature.transpose(1, 2))) for conv in self.convs1]  # [(N,Co,L), ...]*len(Ks)
+        x = [F.tanh(conv(feature.transpose(1, 2))) for conv in self.convs1]  # [(N,Co,L), ...]*len(Ks)
         y = [F.relu(conv(feature.transpose(1, 2)) + self.fc_aspect(aspect_v).unsqueeze(2)) for conv in self.convs2]
         x = [i*j for i, j in zip(x, y)]
         # pooling method

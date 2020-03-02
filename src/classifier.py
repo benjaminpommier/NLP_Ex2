@@ -24,7 +24,7 @@ class Classifier:
         """
         
 # CLEANED TRAIN > to be improved
-def train(train_iter, dev_iter, model, epoch=5):
+def train(train_iter, dev_iter, model, epochs=5):
     # python -m run -lr 5e-3 -batch-size 32 -verbose 1 -model CNN_Gate_Aspect -embed_file glove -r_l r -year 14 -epochs 6 -atsa
 
     time_stamps = []
