@@ -3,9 +3,6 @@ __authors__ = ['Florian BETTINI', 'Maxime LUTEL', 'Gabriel MULLER', 'Benjamin PO
 #Importing modules
 import numpy as np
 import pandas as pd
-import nltk
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
 from sklearn.feature_extraction.text import TfidfVectorizer, ENGLISH_STOP_WORDS
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
